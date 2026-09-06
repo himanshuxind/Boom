@@ -1,16 +1,33 @@
 # 💥 Boom
 
 <p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=32&duration=2500&pause=1000&color=FF4D94&center=true&vCenter=true&width=800&lines=%F0%9F%92%A5+BOOM;%E2%9A%A1+Python+Terminal+Automation;%F0%9F%92%8E+Powered+by+HimaXcore" alt="Boom">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/HimaXcore-ff4d94?style=for-the-badge" alt="HimaXcore">
   <img src="https://img.shields.io/badge/Author-Himanshu-00d1b2?style=for-the-badge" alt="Himanshu">
 </p>
 
-> **A clean and interactive Python terminal automation project.**
+<p align="center">
+  <b>A clean, interactive Python terminal automation project.</b>
+</p>
 
-Boom is a Python-based CLI application created by **Himanshu** under the **HimaXcore** brand.
+---
 
-It is designed to provide a structured terminal experience for **controlled automation, development, and experimentation**.
+## 🌌 About
+
+**Boom** is a Python-based command-line application created by **Himanshu** under the **HimaXcore** brand.
+
+It combines automation functionality with a polished terminal interface designed to make command-line workflows easier to understand and operate.
+
+Boom is built primarily for:
+
+* 🧪 Controlled experimentation
+* 🛠️ Development
+* 🔬 Authorized testing
+* ⚙️ Automation workflows
 
 ---
 
@@ -18,136 +35,75 @@ It is designed to provide a structured terminal experience for **controlled auto
 
 ### 🎨 Interactive CLI
 
-Boom provides a menu-driven interface instead of requiring users to work with complicated command-line arguments.
+A structured terminal interface makes the application easier to navigate.
 
-* Simple navigation
-* Clear prompts
+* Clean menus
 * Colored output
-* Status messages
-* ASCII-style branding
+* Animated status messages
+* ASCII branding
+* Clear prompts
 
-### ⚙️ Input Validation
+### ⚙️ Input Processing
 
-User input is processed before it reaches the execution layer.
+Boom validates user-provided information before processing it.
 
-* Validates supported input
-* Handles incorrect values
-* Normalizes input where required
-* Provides useful feedback
+* Input validation
+* Supported-format handling
+* Error feedback
+* Controlled execution
 
 ### 🚦 Rate Limiting
 
-Boom includes rate-control functionality for supported automated operations.
+Execution can be controlled through rate-limiting functionality.
 
-This helps keep execution predictable and reduces the risk of uncontrolled request activity during authorized testing.
+This helps make automated testing more predictable and prevents uncontrolled request activity.
 
-### 📊 Runtime Statistics
+### 📊 Statistics
 
-The application provides information about activity during the current session.
+Runtime statistics provide visibility into what happens during a session.
 
-This can help with:
+Useful information can include:
 
-* Monitoring execution
-* Understanding results
-* Troubleshooting problems
-* Evaluating test runs
+* Execution counts
+* Success information
+* Failure information
+* Runtime status
 
 ### 🐞 Debug Mode
 
-Debug functionality provides additional information when something goes wrong.
+Debug functionality provides additional information when troubleshooting.
 
 It can help identify:
 
 * Invalid input
-* Configuration problems
+* Configuration issues
 * Request failures
-* Runtime errors
-
-### 🎛️ Configurable Settings
-
-Supported application settings can be changed through the terminal interface.
-
-This allows users to adjust available behavior without repeatedly modifying the source code.
+* Runtime exceptions
 
 ---
 
-## 🧰 Tech Stack
+## 🧰 Built With
 
-Boom is built with a small set of lightweight Python libraries.
+Boom uses a lightweight Python stack:
 
-| Technology   | Purpose                |
-| ------------ | ---------------------- |
-| **Python 3** | Core application       |
-| **Requests** | HTTP communication     |
-| **Colorama** | Terminal colors        |
-| **PyFiglet** | ASCII-style typography |
-
----
-
-## 📋 Requirements
-
-Before installing Boom, make sure you have:
-
-* Python 3.x
-* Git
-* Internet access where external communication is required
-
-### Dependencies
-
-```text
-requests
-colorama
-pyfiglet
-```
+* **Python 3** — application logic
+* **Requests** — HTTP communication
+* **Colorama** — terminal colors
+* **PyFiglet** — ASCII typography
 
 ---
 
 ## 🚀 Installation
 
-### 1. Clone the repository
+### Requirements
 
-```bash
-git clone https://github.com/himanshuxind/Boom.git
-```
+Before starting, install:
 
-### 2. Open the project
+* Python 3.x
+* Git
+* Internet access where required
 
-```bash
-cd Boom
-```
-
-### 3. Install dependencies
-
-```bash
-pip install requests colorama pyfiglet
-```
-
-### 4. Start Boom
-
-```bash
-python main.py
-```
-
-If your system uses `python3`:
-
-```bash
-python3 main.py
-```
-
----
-
-## 📱 Termux
-
-Boom can also be run through Termux on Android.
-
-### Install Python and Git
-
-```bash
-pkg update -y
-pkg install python git -y
-```
-
-### Clone the repository
+### Clone
 
 ```bash
 git clone https://github.com/himanshuxind/Boom.git
@@ -166,64 +122,95 @@ pip install requests colorama pyfiglet
 python main.py
 ```
 
+Or:
+
+```bash
+python3 main.py
+```
+
 ---
 
-## ▶️ Usage
+## 📱 Termux
 
-Start the application:
+Install the required packages:
+
+```bash
+pkg update -y
+pkg install python git -y
+```
+
+Clone Boom:
+
+```bash
+git clone https://github.com/himanshuxind/Boom.git
+cd Boom
+```
+
+Install dependencies:
+
+```bash
+pip install requests colorama pyfiglet
+```
+
+Launch:
 
 ```bash
 python main.py
 ```
 
-Boom will open its interactive terminal interface.
+---
 
-The general workflow is:
+## ▶️ Usage
 
-1. Launch the application.
-2. Select an available option.
-3. Provide the requested input.
-4. Boom validates the input.
-5. Configure supported settings if required.
-6. Execute the selected operation.
-7. Review the resulting status and statistics.
+Launch Boom:
 
-> Available menu options may change between project versions.
+```bash
+python main.py
+```
+
+The application opens an interactive terminal menu.
+
+The basic workflow is:
+
+```text
+Launch
+   ↓
+Select an option
+   ↓
+Enter required input
+   ↓
+Validate
+   ↓
+Configure
+   ↓
+Execute
+   ↓
+Review results
+```
+
+The exact options available may change between releases.
 
 ---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
 ```text
 Boom/
 │
 ├── README.md
+│
 ├── main.py
+│   └── Main application entry point
+│
 ├── mainx.py
+│   └── Supporting application logic
 │
 ├── .git/
+│   └── Git metadata
+│
 └── __pycache__/
+    └── Python cache files
 ```
-
-### `main.py`
-
-The main entry point of Boom.
-
-Run this file to launch the application.
-
-### `mainx.py`
-
-Contains supporting application functionality.
-
-### `README.md`
-
-Contains project documentation and setup instructions.
-
-### `__pycache__/`
-
-Python-generated cache files.
-
-This directory is normally created automatically and does not need to be edited manually.
 
 ---
 
@@ -231,29 +218,25 @@ This directory is normally created automatically and does not need to be edited 
 
 Boom provides supported configuration options through its terminal interface.
 
-Configuration may control things such as:
+Depending on the version, these may include:
 
-* Runtime behavior
+* Runtime preferences
 * Request timing
-* Debugging
-* Input handling
-* Other application preferences
-
-Available settings depend on the current version of the project.
+* Debug settings
+* Input behavior
+* Other application controls
 
 ---
 
 ## 🐛 Troubleshooting
 
-### `ModuleNotFoundError`
-
-Reinstall the required packages:
+### Missing Python package
 
 ```bash
 pip install requests colorama pyfiglet
 ```
 
-### `python` is not recognized
+### Python command not found
 
 Try:
 
@@ -261,110 +244,104 @@ Try:
 python3 main.py
 ```
 
-### Git is not installed
+### Git command not found
 
-Install Git first, then clone the repository again.
+Install Git and clone the repository again.
 
-### Application exits unexpectedly
+### Unexpected errors
 
-Check the terminal error message and:
+Check the terminal output first.
 
-1. Confirm Python 3 is installed.
-2. Reinstall the dependencies.
-3. Check your configuration.
-4. Enable debug mode if available.
-5. Review the reported error.
+Then verify:
+
+1. Python version
+2. Installed dependencies
+3. Configuration
+4. Input values
+5. Debug output
 
 ---
 
 ## 🔐 Responsible Use
 
-Boom is intended for:
+Boom is intended for **education, development, controlled experimentation, and authorized testing**.
 
-* Educational development
-* Python experimentation
-* Authorized testing
-* Controlled automation
-* Personal projects
+Do not use it to:
 
-Do not use the software to:
-
-* Harass or repeatedly contact people without consent
+* Harass individuals
 * Generate unwanted communications
-* Disrupt telecommunications or other services
+* Disrupt services
 * Overload systems
-* Bypass third-party restrictions
-* Perform actions without proper authorization
+* Circumvent service restrictions
+* Perform unauthorized activity
 
-Always comply with applicable laws and the policies of services you interact with.
+Always respect applicable laws and third-party service policies.
 
-> **You are responsible for how you use this software.**
+> **Use automation responsibly.**
 
 ---
 
 ## 🤝 Contributing
 
-Contributions and improvements are welcome.
-
-To contribute:
+Contributions are welcome.
 
 1. Fork the repository.
-2. Create a new branch.
+2. Create a branch.
 3. Make your changes.
-4. Test your changes.
-5. Commit your work.
+4. Test them locally.
+5. Commit your changes.
 6. Open a pull request.
 
-Please keep contributions readable, focused, and consistent with the existing project structure.
+Keep contributions focused, readable, and maintainable.
 
 ---
 
 ## 🗺️ Roadmap
 
-Potential improvements include:
-
-* [ ] Cleaner CLI architecture
-* [ ] Improved configuration management
-* [ ] Expanded error handling
-* [ ] More detailed statistics
-* [ ] Better automated testing
-* [ ] Improved documentation
-* [ ] Additional terminal customization
+* [ ] Improve CLI architecture
+* [ ] Expand configuration
+* [ ] Improve error handling
+* [ ] Expand runtime statistics
+* [ ] Add automated tests
+* [ ] Improve documentation
+* [ ] Add more terminal customization
 
 ---
 
 ## 👨‍💻 Author
 
-**Himanshu**
+<p align="center">
 
-Creator and developer of Boom.
+<strong>Himanshu</strong>
 
-**HimaXcore**
+<br>
 
-Project brand.
+Creator & Developer
+
+<br><br>
+
+<strong>HimaXcore</strong>
+
+<br>
+
+Project Brand
+
+</p>
 
 ---
 
 ## ⭐ Support
 
-If you find Boom useful for learning, development, or authorized experimentation, consider giving the repository a ⭐.
+If you find **Boom** useful, consider giving the repository a ⭐.
 
-It helps the project gain visibility and supports future development.
-
----
-
-## 📄 License
-
-If this repository has a license file, refer to [`LICENSE`](LICENSE) for the applicable terms.
-
-If no license has been added yet, the project remains subject to the rights of its author.
+Every star helps increase the project's visibility.
 
 ---
 
 <p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3000&pause=1200&color=00D1B2&center=true&vCenter=true&width=600&lines=Built+with+Python;Designed+by+Himanshu;Powered+by+HimaXcore" alt="HimaXcore">
+</p>
 
-**💥 Boom**
-
-*Built with Python · Designed by Himanshu · Powered by HimaXcore*
-
+<p align="center">
+  <sub>© 2026 HimaXcore</sub>
 </p>
